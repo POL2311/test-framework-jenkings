@@ -14,7 +14,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -40,6 +40,17 @@ export default defineConfig({
        },
        dependencies: ['setup'],
       testIgnore: [/.*\.setup\.ts/, /tests\/api\/.*/],
+    },
+    {
+      name: 'api-tests',
+      testDir: './tests/api',
+      use: {
+        baseURL: 'https://api-staging.tuapp.com',
+        extraHTTPHeaders: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
     },
     /* Test against mobile viewports. */
     // {
